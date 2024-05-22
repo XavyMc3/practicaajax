@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Tareas</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #f7f7f7;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(200, 200, 200, 0.8));
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .task-list {
+            margin-top: 10px;
+        }
+
+        .task-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .task-item.completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .task-item button {
+            margin-left: 10px;
+        }
+
+        .btn {
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Lista de Tareas</h1>
+        <div id="task-list" class="task-list"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const tasks = [
+                {"id": 1, "task": "Comprar leche", "completed": false},
+                {"id": 2, "task": "Llamar al doctor", "completed": true},
+                {"id": 3, "task": "Estudiar JavaScript", "completed": false},
+                {"id": 4, "task": "Hacer ejercicio", "completed": false},
+                {"id": 5, "task": "Leer un libro", "completed": false}
+            ];
+
+            function displayTasks(tasks) {
+                const taskList = $('#task-list');
+                taskList.empty();
+
+                tasks.forEach(task => {
+                    const taskItem = $(`
+                        <div class="task-item ${task.completed ? 'completed' : ''}">
+                            <span>${task.task}</span>
+                            <div>
+                                <button class="btn btn-success btn-sm complete-task" data-id="${task.id}">Completar</button>
+                                <button class="btn btn-danger btn-sm delete-task" data-id="${task.id}">Eliminar</button>
+                            </div>
+                        </div>
+                    `);
+                    taskList.append(taskItem);
+                });
+
+                $('.complete-task').click(function() {
+                    const taskId = $(this).data('id');
+                    completeTask(taskId);
+                });
+
+                $('.delete-task').click(function() {
+                    const taskId = $(this).data('id');
+                    deleteTask(taskId);
+                });
+            }
+
+            function completeTask(id) {
+                const task = tasks.find(task => task.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    displayTasks(tasks);
+                }
+            }
+
+            function deleteTask(id) {
+                const taskIndex = tasks.findIndex(task => task.id === id);
+                if (taskIndex !== -1) {
+                    tasks.splice(taskIndex, 1);
+                    displayTasks(tasks);
+                }
+            }
+
+            displayTasks(tasks);
+        });
+    </script>
+</body>
+</html>
